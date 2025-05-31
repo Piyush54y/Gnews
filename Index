@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🗞️ Trendy News India</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #e0eafc, #cfdef3);
+      color: #333;
+    }
+    header {
+      background: #1a1a40;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.6rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    select, button {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #0077ff;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #trends {
+      font-size: 0.9rem;
+      color: #333;
+      padding: 0 1rem;
+    }
+    #news-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .news-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .news-card:hover {
+      transform: scale(1.02);
+    }
+    .news-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .news-content {
+      padding: 1rem;
+    }
+    .news-content h2 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .news-content p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.8rem;
+    }
+    .news-content a {
+      background: #0077ff;
+      color: white;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    footer {
+      text-align: center;
+      background: #1a1a40;
+      color: #ccc;
+      padding: 1rem;
+      font-size: 0.85rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>📰 Trendy News India</header>
+
+<div class="controls">
+  <select id="categorySelect">
+    <option value="">Top News</option>
+    <option value="world">World</option>
+    <option value="nation">Nation</option>
+    <option value="business">Business</option>
+    <option value="sports">Sports</option>
+    <option value="technology">Technology</option>
+    <option value="entertainment">Entertainment</option>
+    <option value="health">Health</option>
+    <option value="science">Science</option>
+  </select>
+  <button onclick="loadNews()">🔄 Refresh News</button>
+</div>
+
+<div id="trends">
+  <strong>🔥 Google Trends:</strong> <span id="trendList">Loading...</span>
+</div>
+
+<main id="news-container">
+  <p style="padding: 2rem; text-align:center;">Loading news...</p>
+</main>
+
+<footer>
+  &copy; 2025 | Powered by GNews | Monetized with Monetag
+</footer>
+
+<script>
+  const API_KEY = "49e7a24879d0c648baf86bcee2cfa257";
+  const MONETAG_LINK = "https://otieu.com/4/9390942?url=";
+  const NEWS_CONTAINER = document.getElementById("news-container");
+
+  async function loadNews() {
+    const category = document.getElementById("categorySelect").value;
+    NEWS_CONTAINER.innerHTML = "<p style='text-align:center;'>⏳ Loading...</p>";
+
+    let url = `https://gnews.io/api/v4/top-headlines?lang=en&country=in&token=${API_KEY}`;
+    if (category) {
+      url += `&topic=${category}`;
+    }
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      NEWS_CONTAINER.innerHTML = '';
+
+      data.articles.forEach(article => {
+        const encodedURL = encodeURIComponent(article.url);
+        const monetizedLink = `${MONETAG_LINK}${encodedURL}`;
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        card.innerHTML = `
+          <img src="${article.image || 'https://via.placeholder.com/400x200'}" />
+          <div class="news-content">
+            <h2>${article.title}</h2>
+            <p>${article.description || ''}</p>
+            <a href="${monetizedLink}" target="_blank">🔗 Read More</a>
+          </div>
+        `;
+        NEWS_CONTAINER.appendChild(card);
+      });
+
+    } catch (err) {
+      NEWS_CONTAINER.innerHTML = "<p style='text-align:center;'>⚠️ Error loading news.</p>";
+      console.error(err);
+    }
+  }
+
+  // Fake Google Trends data (live trends API is not public for free use)
+  const fakeTrends = [
+    "IPL 2025", "Indian Elections", "Google AI", "Stock Market", "New Smartphones",
+    "SpaceX Launch", "Petrol Prices", "Crypto Boom", "TikTok Ban", "Job Alerts India"
+  ];
+  document.getElementById("trendList").innerText = fakeTrends.slice(0, 5).join(" • ");
+
+  // Load initial
+  loadNews();
+</script>
+
+</body>
+</html>
