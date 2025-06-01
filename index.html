@@ -2,175 +2,209 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🗞️ Trendy News India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>News & Earn ₹1</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #e0eafc, #cfdef3);
-      color: #333;
+      background: linear-gradient(to bottom, #f1f5f9, #fff);
     }
+
     header {
-      background: #1a1a40;
-      color: white;
+      background: linear-gradient(to right, #0077ff, #00c6ff);
+      color: #fff;
       padding: 1rem;
       text-align: center;
-      font-size: 1.6rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 0 0 20px 20px;
     }
-    .controls {
-      display: flex;
-      justify-content: space-between;
+
+    .balance-box {
+      background: #fff;
+      margin: 1rem;
       padding: 1rem;
-      gap: 1rem;
-      flex-wrap: wrap;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 1.2rem;
     }
-    select, button {
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: none;
-      background: #0077ff;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    #trends {
-      font-size: 0.9rem;
-      color: #333;
-      padding: 0 1rem;
-    }
-    #news-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
-    }
+
     .news-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.2s ease;
+      background: #fff;
+      border-radius: 15px;
+      padding: 1rem;
+      margin: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .news-card:hover {
-      transform: scale(1.02);
-    }
+
     .news-card img {
       width: 100%;
-      height: 160px;
+      max-height: 150px;
       object-fit: cover;
+      border-radius: 10px;
     }
-    .news-content {
-      padding: 1rem;
-    }
-    .news-content h2 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    .news-content p {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 0.8rem;
-    }
-    .news-content a {
+
+    .btn {
+      margin: 5px 5px 5px 0;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
       background: #0077ff;
-      color: white;
-      padding: 0.5rem 0.8rem;
-      border-radius: 6px;
-      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    footer {
-      text-align: center;
-      background: #1a1a40;
-      color: #ccc;
+
+    .btn:hover {
+      background: #005fcc;
+    }
+
+    .upi-box {
+      background: #fff;
+      margin: 1rem;
       padding: 1rem;
-      font-size: 0.85rem;
-      margin-top: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button.submit-upi {
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button.submit-upi:hover {
+      background-color: #218838;
     }
   </style>
 </head>
 <body>
 
-<header>📰 Trendy News India</header>
+<header>📱 Watch News & Earn ₹1</header>
 
-<div class="controls">
-  <select id="categorySelect">
-    <option value="">Top News</option>
-    <option value="world">World</option>
-    <option value="nation">Nation</option>
-    <option value="business">Business</option>
-    <option value="sports">Sports</option>
-    <option value="technology">Technology</option>
-    <option value="entertainment">Entertainment</option>
-    <option value="health">Health</option>
-    <option value="science">Science</option>
-  </select>
-  <button onclick="loadNews()">🔄 Refresh News</button>
+<div class="balance-box">
+  Your Balance: ₹<span id="balance">0</span>
 </div>
 
-<div id="trends">
-  <strong>🔥 Google Trends:</strong> <span id="trendList">Loading...</span>
+<div class="container" id="newsContainer">
+  <p style="text-align:center;">Loading latest news...</p>
 </div>
 
-<main id="news-container">
-  <p style="padding: 2rem; text-align:center;">Loading news...</p>
-</main>
-
-<footer>
-  &copy; 2025 | Powered by GNews | Monetized with Monetag
-</footer>
+<div class="upi-box">
+  <h3>💵 Redeem via UPI</h3>
+  <input type="text" id="upiId" placeholder="Enter your UPI ID" />
+  <input type="number" id="withdrawAmount" placeholder="Amount (Min ₹100)" />
+  <button class="submit-upi" onclick="redeem()">Submit Request</button>
+  <p id="redeemMsg" style="font-weight:bold;"></p>
+</div>
 
 <script>
-  const API_KEY = "49e7a24879d0c648baf86bcee2cfa257";
-  const MONETAG_LINK = "https://otieu.com/4/9390942?url=";
-  const NEWS_CONTAINER = document.getElementById("news-container");
+  const apiKey = "49e7a24879d0c648baf86bcee2cfa257"; // Your GNews API key
+  const newsContainer = document.getElementById("newsContainer");
 
-  async function loadNews() {
-    const category = document.getElementById("categorySelect").value;
-    NEWS_CONTAINER.innerHTML = "<p style='text-align:center;'>⏳ Loading...</p>";
+  // Monetag smartlink URL you provided
+  const smartlinkUrl = "https://otieu.com/4/9390942";
 
-    let url = `https://gnews.io/api/v4/top-headlines?lang=en&country=in&token=${API_KEY}`;
-    if (category) {
-      url += `&topic=${category}`;
-    }
+  // Load balance from localStorage
+  let balance = parseInt(localStorage.getItem("newsBalance") || "0");
+  document.getElementById("balance").innerText = balance;
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      NEWS_CONTAINER.innerHTML = '';
-
-      data.articles.forEach(article => {
-        const encodedURL = encodeURIComponent(article.url);
-        const monetizedLink = `${MONETAG_LINK}${encodedURL}`;
-        const card = document.createElement('div');
-        card.className = 'news-card';
-        card.innerHTML = `
-          <img src="${article.image || 'https://via.placeholder.com/400x200'}" />
-          <div class="news-content">
-            <h2>${article.title}</h2>
-            <p>${article.description || ''}</p>
-            <a href="${monetizedLink}" target="_blank">🔗 Read More</a>
-          </div>
-        `;
-        NEWS_CONTAINER.appendChild(card);
-      });
-
-    } catch (err) {
-      NEWS_CONTAINER.innerHTML = "<p style='text-align:center;'>⚠️ Error loading news.</p>";
-      console.error(err);
-    }
+  // Update balance and UI
+  function updateBalance() {
+    balance += 1;
+    localStorage.setItem("newsBalance", balance);
+    document.getElementById("balance").innerText = balance;
   }
 
-  // Fake Google Trends data (live trends API is not public for free use)
-  const fakeTrends = [
-    "IPL 2025", "Indian Elections", "Google AI", "Stock Market", "New Smartphones",
-    "SpaceX Launch", "Petrol Prices", "Crypto Boom", "TikTok Ban", "Job Alerts India"
-  ];
-  document.getElementById("trendList").innerText = fakeTrends.slice(0, 5).join(" • ");
+  // Open Monetag smartlink ad first, then actual news article, and add balance
+  function openSmartlinkThenNews(newsUrl) {
+    const adWindow = window.open(smartlinkUrl, "_blank");
 
-  // Load initial
-  loadNews();
+    setTimeout(() => {
+      window.open(newsUrl, "_blank");
+    }, 3000);
+
+    if (adWindow) adWindow.focus();
+
+    updateBalance();
+  }
+
+  // Redeem function for UPI withdrawal
+  function redeem() {
+    const upi = document.getElementById("upiId").value.trim();
+    const amount = parseInt(document.getElementById("withdrawAmount").value);
+    const redeemMsg = document.getElementById("redeemMsg");
+
+    if (!upi || !upi.includes("@")) {
+      redeemMsg.style.color = "red";
+      redeemMsg.textContent = "❌ Invalid UPI ID.";
+      return;
+    }
+
+    if (isNaN(amount) || amount < 100) {
+      redeemMsg.style.color = "red";
+      redeemMsg.textContent = "❌ Minimum withdraw amount is ₹100.";
+      return;
+    }
+
+    if (amount > balance) {
+      redeemMsg.style.color = "red";
+      redeemMsg.textContent = "❌ Insufficient balance.";
+      return;
+    }
+
+    // Simulate successful withdrawal
+    balance -= amount;
+    localStorage.setItem("newsBalance", balance);
+    document.getElementById("balance").innerText = balance;
+
+    redeemMsg.style.color = "green";
+    redeemMsg.textContent = `✅ Request sent for ₹${amount} to UPI ID: ${upi}`;
+  }
+
+  // Fetch news from GNews API and build news cards
+  fetch(`https://gnews.io/api/v4/top-headlines?lang=en&country=in&max=5&apikey=${apiKey}`)
+    .then(res => res.json())
+    .then(data => {
+      newsContainer.innerHTML = "";
+      if (data.articles && data.articles.length > 0) {
+        data.articles.forEach(article => {
+          const card = document.createElement("div");
+          card.className = "news-card";
+
+          card.innerHTML = `
+            <h3>${article.title}</h3>
+            ${article.image ? `<img src="${article.image}" alt="News Image" />` : ""}
+            <p>${article.description || ""}</p>
+            <button class="btn" onclick="openSmartlinkThenNews('${article.url}')">🔗 Read Full Article</button>
+            <button class="btn" onclick="alert('Summary: ${article.description ? article.description.slice(0, 100) + (article.description.length > 100 ? "..." : "") : article.title}')">🧠 Summarize</button>
+            <button class="btn" onclick="window.open('https://wa.me/?text=${encodeURIComponent(article.title + ' - ' + article.url)}', '_blank')">📤 WhatsApp</button>
+            <button class="btn" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(article.url)}', '_blank')">📤 Telegram</button>
+          `;
+
+          newsContainer.appendChild(card);
+        });
+      } else {
+        newsContainer.innerHTML = "<p>No articles available.</p>";
+      }
+    })
+    .catch(() => {
+      newsContainer.innerHTML = "<p>⚠️ Failed to load news.</p>";
+    });
 </script>
 
 </body>
